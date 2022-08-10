@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <style>
+
+        .grid-item{
+        	width: 20%;
+            padding: 20px;
+            margin: 5px;
+        }
+        .one{
+            background-color: blueviolet;
+        }
+        .two{
+            background-color:chocolate;
+        }
+        .three{
+            background-color:chartreuse;
+        }
+    </style>
+    </head>
+<body>
+    filter
+    <select class="filter" value-group="color">
+        <option value="*" >all</option>
+        <option value=".one" >one</option>
+        <option value=".two" >two</option>
+        <option value=".three" >three</option>
+    </select>
+    <br>
+    <p class="filters" value-group="color">
+        <button data-name="*" >all</button>
+        <button data-name=".one" >one</button>
+        <button data-name=".two" >two</button>
+        <button data-name=".three" >three</button>
+    </p>
+    <hr>
+	<div class="grid">
+        <div class="grid-item one">Item 2</div>
+        <div class="grid-item one">Item 3</div>
+        <div class="grid-item two">Item 4</div>
+        <div class="grid-item one">Item 1</div>
+        <div class="grid-item two">Item 5</div>
+        <div class="grid-item one">Item 6</div>
+        <div class="grid-item three">Item 7</div>
+        <div class="grid-item one">Item 8</div>
+        <div class="grid-item three">Item 8</div>
+      </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" ></script>
+    
+    <script>
+    	var $grid = $('.grid').isotope({
+            // options
+            itemSelector: '.grid-item',
+            layoutMode: 'fitRows'
+            });
+
+            $('.filter').on('change',function(){
+                var value = $(this).attr('data-name');
+                console.log(value);
+                $grid.isotope({ 
+                    filter: value
+                });
+            });
+            // store filter for each group
+            var filters = {};
+
+            $('.filter').on( 'change', function( event ) {
+                var $select = $( event.target );
+                console.log(event.target);
+                // get group key
+                var filterGroup = $(this).attr('value-group');
+                // set filter for group
+                filters[ filterGroup ] = event.target.value;
+                // combine filters
+                var filterValue = concatValues( filters );
+                // set filter for Isotope
+                $grid.isotope({ filter: filterValue });
+            });
+
+            $('.filters button').on( 'click', function( event ) {
+                var $select = $(this).attr('data-name');
+                
+                // set filter for Isotope
+                $grid.isotope({ filter: $select });
+            });
+
+                // flatten object by concatting values
+            function concatValues( obj ) {
+                var value = '';
+                for ( var prop in obj ) {
+                    value += obj[ prop ];
+                }
+                return value;
+            }
+            
+    </script>
+</body>
+</html>
+
